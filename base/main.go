@@ -11,7 +11,6 @@ import (
 	"os"
 	"reflect"
 	"runtime"
-	"testing"
 	"time"
 
 	mylib1 "github.com/chenxiangcheng1/hello-golang/base/lib1" // 别名
@@ -35,16 +34,6 @@ func hello_print() {
 	fmt.Printf("%d %T\n", a, a)
 	str := "gogogo"
 	fmt.Printf("%s %T\n", str, str)
-}
-
-// =============================================================================
-// 单元测试
-// go test -v main.go
-func hello_testing(t *testing.T) {
-	var a int
-	if a != 0 {
-		t.Errorf("Expected 0, got %d", a)
-	}
 }
 
 // =============================================================================
@@ -925,7 +914,7 @@ func hello_select() {
 
 // =============================================================================
 func main() {
-	// hello_print()
+	hello_print()
 	// hello_var()
 	// hello_const()
 	// hello_func()
@@ -948,5 +937,5 @@ func main() {
 	// hello_goroutine()
 	// hello_channel_without_buffer()
 	// hello_channel_with_buffer()
-	hello_select()
+	// hello_select()
 }
