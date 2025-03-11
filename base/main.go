@@ -72,10 +72,10 @@ func hello_var() {
 // iota常量计数器
 const (
 	SHANGHAI = iota      // 0
-	WENZHOU              // 1
+	WENZHOU              // 1  // 基础iota
 	BEIJING  = iota      // 2
 	NINGBO   = 1         // 1
-	SHAOXIN              // 1
+	SHAOXIN              // 1  // 基础常量
 	HENAN    = iota      // 5
 	AA       = iota      // 6
 	BB       = iota * 10 // 70
@@ -162,6 +162,7 @@ func hello_point() {
 // =============================================================================
 // 11defer
 // defer压栈，外层函数返回后，defer语句弹栈执行
+// 意图：资源清理(替代finally、析构函数)
 func deferFunc() {
 	fmt.Println("deferFunc")
 }
@@ -178,8 +179,21 @@ func hello_defer() int {
 	return returnFunc()
 }
 
+func hello_defer_closure() {
+	x := 10
+	y := 1
+	defer func(y int) {
+		fmt.Println(y) // 参数预计算，该参数在defer被声明时立即计算
+		fmt.Println(x) // 20  // 闭包引用的变量
+	}(y)
+	y = 2
+	x = 20
+}
+
 // =============================================================================
 // 12数组和函数形参传递方式(都是值拷贝)
+// 区别：
+// 其实本质是：slice是含底层数组指针的结构体 拷贝后指向相同的底层数组；而数组是值类型 拷贝是进行完整的拷贝。
 func changeArray(myArray [5]int) { // 值拷贝
 	myArray[0] = 999 // 修改副本
 }
@@ -190,7 +204,7 @@ func changeSlice(mySlice []int) { // 值拷贝含指针
 }
 
 func traverseArray(myArray [5]int) {
-	for index, value := range myArray {
+	for index, value := range myArray { // range必须与for关键字结合使用
 		fmt.Println(index, value)
 	}
 }
@@ -213,8 +227,6 @@ func hello_array() {
 	myArray2 := [5]int{1, 2, 3}
 	mySlice := []int{1, 2, 3} // slice切片
 	fmt.Printf("%T %T %T %T\n", myArray1, myArray2, mySlice, myArray2[:])
-	// 区别：
-	// 其实本质是：slice是含底层数组指针的结构体 拷贝后指向相同的底层数组；而数组是值类型 拷贝是进行完整的拷贝。
 	changeArray(myArray2)
 	traverseArray(myArray2)
 
@@ -370,7 +382,7 @@ func hello_struct() {
 }
 
 // =============================================================================
-// 18OOP#Class=struct+方法接收器(method receiver)
+// 18OOP#Class = struct + 方法接收器(method receiver)
 // 接收器：在函数名之前指定接收器变量名和类型，通过接收器struct实例调用
 // 类名大写表示public
 type Hero struct {
@@ -914,13 +926,14 @@ func hello_select() {
 
 // =============================================================================
 func main() {
-	hello_print()
+	// hello_print()
 	// hello_var()
 	// hello_const()
 	// hello_func()
 	// hello_lib()
 	// hello_point()
 	// hello_defer()
+	hello_defer_closure()
 	// hello_array()
 	// hello_slice()
 	// hello_map()
