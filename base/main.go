@@ -184,7 +184,7 @@ func hello_defer_closure() {
 	y := 1
 	defer func(y int) {
 		fmt.Println(y) // 参数预计算，该参数在defer被声明时立即计算
-		fmt.Println(x) // 20  // 闭包引用的变量
+		fmt.Println(x) // 20  // 闭包引用的变量, 用于延迟计算
 	}(y)
 	y = 2
 	x = 20
