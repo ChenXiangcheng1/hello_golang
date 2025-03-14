@@ -24,12 +24,6 @@ import (
 // %p: 指针类型变量
 // %t: bool
 func hello_print() {
-	fmt.Println("hello Golang")
-	time.Sleep(1 * time.Second)
-	fmt.Print("111")
-	fmt.Println("222")
-	fmt.Printf("%d\n", 333)
-
 	var a int = 100
 	fmt.Printf("%d %T\n", a, a)
 	str := "gogogo"
@@ -599,8 +593,9 @@ func processAnything(arg interface{}) {
 
 	// 类型断言
 	// 类型断言的本质是：获取arg的pair type，检查是否实现了interface指定的方法
-	var v string = arg.(string) // 普通赋值，类型断言失败会panic
-	v, ok := arg.(string)       // 多值返回，类型断言失败不会panic
+	var v string = arg.(string) // 普通赋值，类型断言失败会panic()
+	v, ok := arg.(string)       // 多值返回，类型断言失败不会panic()
+	// panic运行时错误, 后续不执行，直接打印 panic: interface conversion: interface {} is int, not string
 	fmt.Printf("%v %T\n", v, v)
 	fmt.Printf("%v %T\n", ok, ok) // bool
 
@@ -933,7 +928,7 @@ func main() {
 	// hello_lib()
 	// hello_point()
 	// hello_defer()
-	hello_defer_closure()
+	// hello_defer_closure()
 	// hello_array()
 	// hello_slice()
 	// hello_map()
@@ -942,7 +937,7 @@ func main() {
 	// hello_class()
 	// hello_inherit()
 	// hello_interface()
-	// hello_typeassert()
+	hello_typeassert()
 	// hello_pair()
 	// hello_reflect()
 	// hello_structTag()
