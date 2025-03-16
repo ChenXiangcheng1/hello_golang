@@ -1,4 +1,4 @@
-package hellotime
+package hello_time
 
 import (
 	"fmt"
@@ -6,58 +6,113 @@ import (
 	"time"
 )
 
-func TestMain(t *testing.T) {
-	// 时间常量
-	time.Sleep(1 * time.Second)
+func TestDemo(t *testing.T) {
+	getTimeDefault()
+}
 
-	// 转换
+// 转换
+func TestConvert(t *testing.T) {
 	now := GetCurrentTime()
-	fmt.Printf("%T %v\n", now, now)
+	fmt.Printf("Now: %T %v\n", now, now) // China Standard Time
 	nowUTC := now.UTC()
-	fmt.Printf("%T %v\n", nowUTC, nowUTC)
+	fmt.Printf("UTC: %T %v\n", nowUTC, nowUTC) // Coordinated Universal Time, monotonic clock单调时钟
+
+	// time.Time转为String
 	nowStr := now.String()
-	fmt.Printf("%T %v\n", nowStr, nowStr)
-	fmtStr := "2006-01-02T15:04:05+0800"
-	nowStr2 := now.Format(fmtStr) // 将now转换为字符串，Format()参数必须是"2006-01-02T15:04:05+0000 UTC" 12345
-	fmt.Println(now, nowStr2)
-	fmt.Printf("%T %v\n", nowStr2, nowStr2)
-	nowS1 := now.Unix() // 秒
-	fmt.Printf("%T %v\n", nowS1, nowS1)
-	nowS2 := now.UnixNano() // 纳秒
-	fmt.Printf("%T %v\n", nowS2, nowS2)
-	nowS3 := Time2TimeStampMill(now)
-	fmt.Printf("%T %v\n", nowS3, nowS3)
+	fmt.Printf("str: %T %v\n", nowStr, nowStr)
+	fmtStr := "2006-01-02T15:04:05+0800" // +0800是字符串
+	nowStr2 := now.Format(fmtStr)        // 将now转换为字符串，Format()参数必须是"2006-01-02T15:04:05+0000 UTC" 12345
+	fmt.Printf("str2: %T %v\n", nowStr2, nowStr2)
 
-	timeStamp := int64(1581348090000)
-	fmt.Println(TimeStamp2TimeSecond(timeStamp), TimeStamp2TimeMill(timeStamp), TimeStamp2TimeNano(timeStamp))
+	// String转time.Time
+	timeStr := "2020-02-10T20:01:30+0800"
+	fmtStr = "2006-01-02T15:04:05+0800" // +0800是字符串
+	// t1, err := time.Parse(fmtStr, timeStr) // 注意t和time都是已有变量
+	t1, err := time.ParseInLocation(fmtStr, timeStr, TIME_LOCATION)
+	if err != nil {
+		fmt.Printf("%T %v\n", err, err) // *time.ParseError
+		t.Errorf("time.Parse error: %v", err)
+	} else {
+		fmt.Printf("Time: %T %v\n", t1, t1)
+	}
 
-	// 创建
-	myTime := time.Date(2020, 2, 10, 20, 1, 30, 0, TIME_LOCATION)
-	fmt.Printf("%T %v\n", myTime, myTime)
+	timeStr = "2020-02-10T20:01:30+0800"
+	t2, err2 := TimeStr2Time(timeStr)
+	if err2 != nil {
+		fmt.Printf("%T %v\n", err2, err2)
+	} else {
+		fmt.Printf("Time: %T %v\n", t2, t2)
+	}
 
-	year, month, day := myTime.Date()
+	// time.Time转时间戳
+	secd := now.Unix() // 秒时间戳
+	fmt.Printf("Second: %T %v\n", secd, secd)
+	nano := now.UnixNano() // 纳秒时间戳
+	fmt.Printf("Nano: %T %v\n", nano, nano)
+	mill := Time2TimeStampMill(now) // 毫秒时间戳
+	fmt.Printf("Mill: %T %v\n", mill, mill)
+
+	// 时间戳转time.Time
+	t1 = TimeStampSecond2Time(secd)
+	fmt.Printf("Time: %T %v\n", t1, t1)
+	t1 = TimeStampNano2Time(nano)
+	fmt.Printf("Time: %T %v\n", t1, t1)
+	t1 = TimeStampMill2Time(mill)
+	fmt.Printf("Time: %T %v\n", t1, t1)
+}
+
+// time.Time的计算和比较
+func TestCalc(t *testing.T) {
+	tm := GetCurrentTime()
+	tomorrow := tm.AddDate(0, 0, 1)
+	tomorrow = tomorrow.Add(1 * time.Hour)
+	timeDuration := tomorrow.Sub(tm)
+	fmt.Printf("%T %v\n", timeDuration, timeDuration) // time.Duration
+
+	timeDuration_hours := timeDuration.Hours()
+	fmt.Printf("%T %v\n", timeDuration_hours, timeDuration_hours)
+	timeDuration_minutes := timeDuration.Minutes()
+	fmt.Printf("%T %v\n", timeDuration_minutes, timeDuration_minutes)
+
+	fmt.Println(tm.Before(tomorrow))
+	fmt.Println(tm.Equal(tomorrow))
+	fmt.Println(tm.After(tomorrow))
+}
+
+// 时间常量
+func TestConst(t *testing.T) {
+	v := time.Nanosecond
+	fmt.Printf("%T %v\n", v, v) // time.Duration int64(1)
+}
+
+// 定义
+func TestDefine(t *testing.T) {
+	// 定义
+	mt := time.Date(2025, 3, 1, 16, 1, 07, 30, TIME_LOCATION)
+	fmt.Printf("%T %v\n", mt, mt)
+	// ts := int64(1581348090000)  // 时间戳
+
+	// 属性和方法
+	year, month, day := mt.Date()
 	fmt.Printf("%T %v\n", year, year)
 	fmt.Printf("%T %v\n", month, month) // time.Month
 	fmt.Printf("%T %v\n", day, day)
-	fmt.Println(year, month, day)
-	hour, minute, second := now.Clock()
-	fmt.Println(hour, minute, second)
-	fmt.Println(now.Weekday())
 
-	// 时间比较计算(需要在同一个时区)
-	fmt.Println(myTime.Before(now))
-	fmt.Println(myTime.After(now))
-	fmt.Println(myTime.Equal(now))
+	hour, minute, second := mt.Clock()
+	fmt.Printf("%T %v\n", hour, hour)
+	fmt.Printf("%T %v\n", minute, minute)
+	fmt.Printf("%T %v\n", second, second)
 
-	// 时间计算
-	timeDuration := now.Sub(myTime)
-	fmt.Printf("%T %v\n", timeDuration, timeDuration)
-	timeDuration_hours := timeDuration.Hours()
-	fmt.Printf("%T %v\n", timeDuration_hours, timeDuration_hours)
-	fmt.Println(timeDuration.Minutes(), timeDuration.Seconds())
+	hour = mt.Hour()
+	fmt.Printf("%T %v\n", hour, hour)
 
-	tomorrow := now.AddDate(0, 0, 1)
-	fmt.Printf("%T %v\n", tomorrow, tomorrow)
-	oneHourLater := tomorrow.Add(1 * time.Hour)
-	fmt.Printf("%T %v\n", oneHourLater, oneHourLater)
+	weekday := mt.Weekday()
+	fmt.Printf("%T %v\n", weekday, weekday)
+}
+
+func TestMain(t *testing.T) {
+	time.Sleep(1 * time.Second)
+
+	mt := GetCurrentTime()
+	fmt.Printf("%T %v\n", mt, mt)
 }

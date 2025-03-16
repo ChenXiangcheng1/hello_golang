@@ -5,15 +5,18 @@ import (
 	"testing"
 )
 
-// doc: https://devdocs.io/go/testing/index
-// go help test
-// go help testflag
 /*
-go help testfunc
-func TestXxx(t *testing.T) { ... }  // 单元测试
-func BenchmarkXxx(b *testing.B) { ... }  // 基准测试
-func FuzzXxx(f *testing.F) { ... }  // 模糊测试
-func ExampleType_Method() { ... }  // 示例函数
+	doc: https://devdocs.io/go/testing/index
+	go help test
+	go help testflag
+*/
+
+/*
+	go help testfunc
+	func TestXxx(t *testing.T) { ... }  // 单元测试
+	func BenchmarkXxx(b *testing.B) { ... }  // 基准测试
+	func FuzzXxx(f *testing.F) { ... }  // 模糊测试
+	func ExampleType_Method() { ... }  // 示例函数
 */
 
 func TestXxx(t *testing.T) {
@@ -21,6 +24,7 @@ func TestXxx(t *testing.T) {
 	// t.Logf("%T %v \n", t, t)
 	got := custom_abs(-1)
 	if got != 1 {
+		// 测试函数不应该有返回，使用t.Errorf()代替
 		t.Errorf("Abs(-1) = %d; want 1", got) // 断言函数：Error、Fail、FailNow
 	}
 }
@@ -43,8 +47,9 @@ func ExamplePrintln() {
 	// this example.
 }
 
+// 命令行：
 // 本地目录模式(当前目录执行)
-// go test
+// go test  // go test时读取os.Stdin会返回EOF
 
 // 包列表模式(会缓存 -count=1禁用缓存)
 // go test -timeout 30s github.com/chenxiangcheng1/hello-golang/hello_module/hello_gomodule/hello_testing
