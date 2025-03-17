@@ -117,6 +117,9 @@ func TestRand(t *testing.T) {
 	fmt.Printf("%v\n", rand.Intn(5))  // [0, n)
 	fmt.Printf("%v\n", rand.Uint32()) // [0, 2^32)
 
+	slice := rand.Perm(5)
+	fmt.Printf("%T %v\n", slice, slice) // [n]int [0,n)
+
 	rs := rand.NewSource(time.Now().UnixNano())
 	fmt.Printf("%T\n", rs)
 	localRand := rand.New(rs)

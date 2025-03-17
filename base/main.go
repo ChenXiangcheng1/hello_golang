@@ -257,7 +257,15 @@ func hello_slice() {
 
 	// 追加，容量不足会扩容为两倍
 	printSlice(mySlice2)
+	// n := 0  // 先扩容再append
+	// for _, err := range iter {
+	// 	if err != nil {
+	// 		n++
+	// 	}
+	// }
+	// mySlice2 = make([]int, 0, n)
 	mySlice2 = append(mySlice2, 4)
+
 	printSlice(mySlice2)
 
 	// 截取(子列表), golang切片共享底层数组, python(list)切片会拷贝, python(numpy)切片共享内存
@@ -615,7 +623,7 @@ func processAnything(arg interface{}) {
 		fmt.Println("if: not int", v)
 	}
 
-	// Golang 类型switch
+	// Golang switch类型选择(类型断言的语法糖)
 	switch v := arg.(type) {
 	default:
 		fmt.Printf("%v %T\n", v, v)
@@ -625,6 +633,8 @@ func processAnything(arg interface{}) {
 		fmt.Println("switch: is int", v)
 	case string:
 		fmt.Println("switch: is string", v)
+	case interface{ fooRetStr() fmt.Stringer }:
+		fmt.Println("switch: is interface{ fooRetStr() fmt.Stringer }", v)
 	default:
 		fmt.Println("switch: unknown", v)
 	}
