@@ -1,4 +1,4 @@
-package hello_math
+package hello_math_test
 
 import (
 	"fmt"

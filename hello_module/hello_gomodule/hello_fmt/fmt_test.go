@@ -1,7 +1,8 @@
-package hello_fmt
+package hello_fmt_test
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -41,7 +42,7 @@ func TestFprintf(t *testing.T) {
 		fmt.Printf("%T %v\n", ret, ret) // 字节数
 	}
 
-	fileObj, err := os.OpenFile("./testdata/data.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	fileObj, err := os.OpenFile("./testdata/data.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
 	if err != nil {
 		t.Errorf("OpenFile error: %v\n", err)
 	}
@@ -60,10 +61,27 @@ func TestSprintf(t *testing.T) {
 	fmt.Printf("%T %vover\n", str, str)
 }
 
-// fmt.Errorf(str) -> *errors.errorString
+// 重要
+// fmt.Errorf(fmtStr, ...any) -> *errors.errorString  // 和 errors.New()一样
+// fmt.Errorf(fmtStr(%w), ...any) -> *fmt.wrapError
 func TestErrorf(t *testing.T) {
-	err := fmt.Errorf("%v\n", "error")
+	err := fmt.Errorf("%v", "failed to aaa")
 	fmt.Printf("%T %v\n", err, err) // *errors.errorString
+
+	// 常用 返回自封装错误信息的error
+	// if err != nil {
+	// 	return nil, fmt.Errorf("xxx error: %v", err)
+	// }
+
+	ErrXxx := errors.New("failed to xxx")
+	fmt.Printf("%T %v\n", ErrXxx, ErrXxx) // *errors.errorString
+	if err != nil {
+		err = fmt.Errorf("%v", err) // *errors.errorString
+		fmt.Printf("%T %v\n", err, err)
+		err = fmt.Errorf("%w: %v", ErrXxx, err) // *fmt.wrapError  // %w
+		fmt.Printf("%T %v\n", err, err)
+		// return nil, fmt.Errorf("%w: %v", ErrXxx, err)
+	}
 }
 
 // fmt.Printf() 输出到os.Stdout标准输出

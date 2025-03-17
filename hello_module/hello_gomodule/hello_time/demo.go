@@ -1,4 +1,4 @@
-package hello_time
+package hello_time_test
 
 import (
 	"errors"

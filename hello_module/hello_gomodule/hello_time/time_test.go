@@ -1,4 +1,4 @@
-package hello_time
+package hello_time_test
 
 import (
 	"fmt"
@@ -88,7 +88,7 @@ func TestConst(t *testing.T) {
 // 定义
 func TestDefine(t *testing.T) {
 	// 定义
-	mt := time.Date(2025, 3, 1, 16, 1, 07, 30, TIME_LOCATION)
+	mt := time.Date(2025, 3, 1, 16, 1, 0o7, 30, TIME_LOCATION)
 	fmt.Printf("%T %v\n", mt, mt)
 	// ts := int64(1581348090000)  // 时间戳
 
