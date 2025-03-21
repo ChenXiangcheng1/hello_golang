@@ -8,14 +8,19 @@ import (
 
 /*
 golang error和exception区别:
-Errors as value
-Monadic 结构化 层层unwarp (无隐藏控制流)
-强制用户错误检查if-else 使用错误链
-缺少一个语法糖单行错误处理
+Errors as value, golang error被看作一等公民(值)
+Monadic 结构化 层层unwarp  好处: 无隐藏控制流
+完全控制error错误链(没强制用户处理)
+	强制用户错误检查if-else 好处: 没有uncaught exception
+	没强制用户处理 缺点: 不如union type严格约束, 多返回值可能存在歧义, 可能上游没处理error
+缺少一个语法糖单行错误处理  // golang混淆了BUG(编程错误)和异常(业务逻辑的一部分)，在可能BUG处也要求设置检查点
 
 Exceptions
-特殊隐藏控制流 栈展开走特殊控制流比return性能差
+特殊隐藏控制流 需要进行stack trace堆栈跟踪 当需要时pop比return性能差
 不需要次次错误检查 含栈信息
+没强制用户错误检查(懒惰的编程习惯 一直冒泡到主程序) 没强制用户处理
+
+主要区别在于：值 控制流
 */
 
 /*
@@ -92,7 +97,24 @@ func TestCustomError(t *testing.T) {
 	} else if err != nil {
 		t.Errorf("%T %v", err, err)
 		// return nil, fmt.Errorf("xxx error: %v", err)
-	} else {
-		fmt.Printf("%T %v\n", ret, ret)
+		return
+	} // if err直接return，避免if-else嵌套
+	fmt.Printf("%T %v\n", ret, ret)
+}
+
+func must(v interface{}, err error) interface{} {
+	if err != nil {
+		panic(fmt.Sprintf("unexpected error: %v", err))
 	}
+	return v
+}
+
+func dosomething() (int, error) {
+	return 0, nil
+	// return -1, errors.New("failed to dosomething")
+}
+
+func TestBug(t *testing.T) {
+	ret := must(dosomething()) // 无需if-else
+	fmt.Printf("%T %v\n", ret, ret)
 }

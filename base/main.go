@@ -157,6 +157,7 @@ func hello_point() {
 // 11defer
 // defer压栈，外层函数返回后，defer语句弹栈执行
 // 意图：资源清理(替代finally、析构函数)
+// 但可能被滥用
 func deferFunc() {
 	fmt.Println("deferFunc")
 }
@@ -505,7 +506,7 @@ type Dog struct {
 	color string
 }
 
-// 实现接口
+// golang实现接口，不需要显式声明
 // 使用值接收器，Cat、*Cat类型都实现了该接口
 func (this Cat) Sleep() {
 	fmt.Println("Cat.Sleep()...")
@@ -593,6 +594,8 @@ func (this PetPig) GetType() string {
 func (this PetPig) GetAge() int {
 	return 1
 }
+
+// =============================================================================
 
 // =============================================================================
 // 21interface{}空接口 和类型断言机制(运行时类型检查 与泛型编译时类型检查不同)(类似Java Object、C++ std::any)
@@ -780,18 +783,20 @@ func hello_json() {
 // 26co-routine、goroutine(Golang协程)、GMP
 
 // co-routine(协程):
-// 非抢占式协程(协作式)
+// 协作式(cooperative 非抢占式协程)
 // Golang: 不支持非抢占式协程
-// Python: async-await
+// Python: async-await 本质是由事件循环(主线程)调度的、通过await传递消息的一个可以挂起可恢复的函数
 // Java: 不支持非抢占式协程，提供CompletableFuture进行异步编程
 
 // 抢占式协程(协程调度器)
-// Golang: goroutine  // A goroutine is a lightweight thread managed by the Go runtime.
+// Golang: goroutine
 // Python: 不支持抢占式协程
 // Java: Virtual threads
 
 // GMP(goroutine user_thread processor)
 // GMP架构看笔记图
+
+// goroutine 协程 // 由go运行时调度的用户态的并发执行体(并发执行的函数)  // A goroutine is a lightweight thread managed by the Go runtime.
 
 // =============================================================================
 // 27goroutine
@@ -930,6 +935,14 @@ func hello_select() {
 }
 
 // =============================================================================
+func hello_num() {
+	num2 := 0b1010
+	num8 := 0o666
+	num16 := 0xFF
+	fmt.Printf("%d %d %d\n", num2, num8, num16)
+}
+
+// =============================================================================
 func main() {
 	// hello_print()
 	// hello_var()
@@ -947,7 +960,7 @@ func main() {
 	// hello_class()
 	// hello_inherit()
 	// hello_interface()
-	hello_typeassert()
+	// hello_typeassert()
 	// hello_pair()
 	// hello_reflect()
 	// hello_structTag()
@@ -956,4 +969,5 @@ func main() {
 	// hello_channel_without_buffer()
 	// hello_channel_with_buffer()
 	// hello_select()
+	hello_num()
 }

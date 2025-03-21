@@ -25,7 +25,8 @@ func TestXxx(t *testing.T) {
 	got := custom_abs(-1)
 	if got != 1 {
 		// 测试函数不应该有返回，使用t.Errorf()代替
-		t.Errorf("Abs(-1) = %d; want 1", got) // 断言函数：Error、Fail、FailNow
+		t.Errorf("Abs(-1) = %d; want 1", got) // 断言函数：Error、fatal、Fail
+		t.Fatalf("over %v\n", got)            // t.Logf() + t.failNow()
 	}
 }
 
